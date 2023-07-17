@@ -8,8 +8,8 @@
     "dev": "nodemon src/index.js"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Jamiul Islam",
+  "license": "MIT",
   "devDependencies": {
     "nodemon": "^3.0.1"
   },
