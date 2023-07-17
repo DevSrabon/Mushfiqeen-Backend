@@ -21,7 +21,6 @@ exports.signup = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log({ email, password });
     if (!email || !password) {
       return res.status(401).json({
         status: "fail",
@@ -30,10 +29,7 @@ exports.login = async (req, res) => {
     }
 
     const user = await findUserByEmail(email);
-    console.log(
-      "🚀 ~ file: user.controller.js:32 ~ exports.login= ~ user:",
-      user
-    );
+
     if (!user) {
       return res.status(401).json({
         status: "fail",
