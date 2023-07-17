@@ -12,6 +12,7 @@
 
 ### folder structure
 
+```
 ├── **user**
 │ ├── user.constants.ts (helper functions)
 │ ├── user.interface.ts (user data initialization)
@@ -29,6 +30,7 @@
 │ ├── post.controller.ts (get, post, ...request)
 │ ├── post.service.ts (business logic of get, post, ...requests)
 ├── ...
+```
 
 ## Core Features
 
