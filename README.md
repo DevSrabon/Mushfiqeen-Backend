@@ -8,6 +8,28 @@
 
 ![erp model](https://imgur.com/QkjQYqY.jpg)
 
+## design pattern (MVC)
+
+### folder structure
+
+├── **user**
+│ ├── user.constants.ts (helper functions)
+│ ├── user.interface.ts (user data initialization)
+│ ├── user.model.ts (user model and statics)
+│ ├── user.validation.ts (zod validation)
+│ ├── user.route.ts (get, post, ...routes)
+│ ├── user.controller.ts (get, post, ...request)
+│ ├── user.service.ts (business logic of get, post, ...requests)
+├── **post**
+│ ├── post.constants.ts (helper functions)
+│ ├── post.interface.ts (post data initialization)
+│ ├── post.model.ts (post model and statics)
+│ ├── post.validation.ts (zod validation)
+│ ├── post.route.ts (get, post, ...routes)
+│ ├── post.controller.ts (get, post, ...request)
+│ ├── post.service.ts (business logic of get, post, ...requests)
+├── ...
+
 ## Core Features
 
 - Interface --> Model --> Schema --> route --> business logic
