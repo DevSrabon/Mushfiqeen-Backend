@@ -55,6 +55,7 @@ domain/api/v1/
 
 ### Post
 
+- domain/api/v1/create-post (POST)
 - domain/api/v1/post (GET)
 - domain/api/v1/post?page=1&limit=10 (GET) **pagination**
 - domain/api/v1/post?writer=xyz (GET) **search params**
@@ -63,7 +64,7 @@ domain/api/v1/
 
 ### User
 
-- domain/api/v1/user (GET)
 - domain/api/v1/create-user (POST)
+- domain/api/v1/user (GET)
 - domain/api/v1/user/:id (PATCH)
 - domain/api/v1/user/:id (DELETE)
