@@ -8,3 +8,17 @@ exports.signupService = async (userInfo) => {
 exports.findUserByEmail = async (email) => {
   return await User.findOne({ email });
 };
+
+exports.findUserByToken = async (token) => {
+  return await User.findOne({ confirmationToken: token });
+};
+exports.resetPasswordByToken = async (resetToken) => {
+  return await User.findOne({
+    passwordResetToken: resetToken,
+    passwordResetExpires: { $gt: Date.now() },
+  });
+};
+
+exports.deleteAll = async () => {
+  return await User.deleteMany({});
+};
