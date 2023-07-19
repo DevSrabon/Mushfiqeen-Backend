@@ -1,15 +1,16 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
 const userSchema = new mongoose.Schema(
   {
     email: {
       type: String,
-      required: [true, "Email address is required"],
-      unique: true,
-      trim: true,
-      localStorage: true,
       validate: [validator.isEmail, "Provide a valid Email"],
+      required: [true, "Email address is required"],
+      unique: [true, "Email is already taken"],
+      trim: true,
+      lowercase: true,
     },
     password: {
       type: String,
@@ -72,6 +73,8 @@ const userSchema = new mongoose.Schema(
       default: "inactive",
       enum: ["active", "inactive", "blocked"],
     },
+    confirmationToken: String,
+    confirmationTokenExpire: String,
     passwordChangeAt: Date,
     passwordResetToken: String,
     passwordResetExpires: Date,
@@ -98,6 +101,24 @@ userSchema.pre("save", function (next) {
 userSchema.methods.comparePassword = function (password, hash) {
   const isPasswordValid = bcrypt.compareSync(password, hash);
   return isPasswordValid;
+};
+
+userSchema.methods.generateConfirmationToken = function () {
+  const token = crypto.randomBytes(32).toString("hex");
+  this.confirmationToken = token;
+  const date = new Date();
+  date.setDate(date.getDate() + 1);
+  this.confirmationTokenExpire = date;
+  return token;
+};
+
+userSchema.methods.generateResetToken = function () {
+  const token = crypto.randomBytes(32).toString("hex");
+  this.passwordResetToken = token;
+  const date = new Date();
+  date.setDate(date.getDate() + 1);
+  this.passwordResetExpires = date;
+  return token;
 };
 
 const User = mongoose.model("User", userSchema);
