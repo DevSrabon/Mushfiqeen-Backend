@@ -11,6 +11,24 @@ const { generateToken } = require("../utils/token");
 exports.signup = async (req, res) => {
   try {
     const user = await signupService(req.body);
+    const accessToken = generateToken(user);
+
+    res.status(200).json({
+      status: "success",
+      message: "Successfully signed up",
+      data: user,
+      accessToken,
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: "fail",
+      error,
+    });
+  }
+};
+exports.emailVerification = async (req, res) => {
+  try {
+    const user = await signupService(req.body);
 
     const token = user.generateConfirmationToken();
 
@@ -50,85 +68,6 @@ exports.signup = async (req, res) => {
     res.status(400).json({
       status: "fail",
       error,
-    });
-  }
-};
-
-exports.login = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(401).json({
-        status: "fail",
-        error: "Please provide your credentials",
-      });
-    }
-
-    const user = await findUserByEmail(email);
-
-    if (!user) {
-      return res.status(401).json({
-        status: "fail",
-        error: "No user found, Please create an account",
-      });
-    }
-
-    const isPasswordValid = user.comparePassword(password, user.password);
-
-    if (!isPasswordValid) {
-      return res.status(403).json({
-        status: "fail",
-        error: "Password is not correct",
-      });
-    }
-    if (user.status != "active") {
-      return res.status(401).json({
-        status: "fail",
-        error: "Your account is not active yet",
-      });
-    }
-
-    const token = generateToken(user);
-
-    const { password: pwd, ...others } = user.toObject();
-
-    res.status(200).json({
-      status: "success",
-      message: "Successfully login up",
-      data: { user: others, token },
-    });
-  } catch (error) {
-    console.log({ error });
-    res.status(400).json({
-      status: "fail",
-      error,
-    });
-  }
-};
-
-exports.getToken = async (req, res) => {
-  try {
-    const { email } = req.user;
-
-    const user = await findUserByEmail(email);
-    if (user) {
-      const accessToken = generateToken(user);
-      res.status(200).json({
-        status: "success",
-        user,
-        accessToken,
-      });
-    } else {
-      res.status(404).json({
-        status: "fail",
-        message: "User not found",
-      });
-    }
-  } catch (error) {
-    res.status(500).json({
-      status: "error",
-      message: "Internal Server Error",
-      error: error.message,
     });
   }
 };
@@ -206,16 +145,16 @@ exports.forgotPassword = async (req, res) => {
           <h1 style="color: #007bff;">Account Reset</h1>
           <p style="font-size: 16px;">Dear ${user?.fullName},</p>
           <p style="font-size: 16px;">
-            We received a request to reset your account password. Please click the link below to reset your password:
+          We received a request to reset your account password. Please click the link below to reset your password:
           </p>
           <a href=${resetLink} style="display: block; margin-top: 15px; padding: 10px 20px; background-color: #007bff; color: #fff; text-align: center; text-decoration: none; border-radius: 4px;">Reset Password</a>
           <p style="font-size: 16px; margin-top: 10px;">
-            If you did not request this password reset, please ignore this email. Your account is secure.
+          If you did not request this password reset, please ignore this email. Your account is secure.
           </p>
           <p style="font-size: 16px;">Best regards,</p>
           <p style="font-size: 16px;">Musfiqeen</p>
-        </div>
-      `,
+          </div>
+          `,
     };
     await verifyEmail(sendMailBody);
 
@@ -271,5 +210,84 @@ exports.deleteAllUsers = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+  }
+};
+
+exports.login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(401).json({
+        status: "fail",
+        error: "Please provide your credentials",
+      });
+    }
+
+    const user = await findUserByEmail(email);
+
+    if (!user) {
+      return res.status(401).json({
+        status: "fail",
+        error: "No user found, Please create an account",
+      });
+    }
+
+    const isPasswordValid = user.comparePassword(password, user.password);
+
+    if (!isPasswordValid) {
+      return res.status(403).json({
+        status: "fail",
+        error: "Password is not correct",
+      });
+    }
+    if (user.status != "active") {
+      return res.status(401).json({
+        status: "fail",
+        error: "Your account is not active yet",
+      });
+    }
+
+    const token = generateToken(user);
+
+    const { password: pwd, ...others } = user.toObject();
+
+    res.status(200).json({
+      status: "success",
+      message: "Successfully login up",
+      data: { user: others, token },
+    });
+  } catch (error) {
+    console.log({ error });
+    res.status(400).json({
+      status: "fail",
+      error,
+    });
+  }
+};
+
+exports.getToken = async (req, res) => {
+  try {
+    const { email } = req.user;
+
+    const user = await findUserByEmail(email);
+    if (user) {
+      const accessToken = generateToken(user);
+      res.status(200).json({
+        status: "success",
+        data: user,
+        accessToken,
+      });
+    } else {
+      res.status(404).json({
+        status: "fail",
+        message: "User not found",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+      error: error.message,
+    });
   }
 };
