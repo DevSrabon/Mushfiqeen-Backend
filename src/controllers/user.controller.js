@@ -239,12 +239,12 @@ exports.login = async (req, res) => {
         error: "Password is not correct",
       });
     }
-    if (user.status != "active") {
-      return res.status(401).json({
-        status: "fail",
-        error: "Your account is not active yet",
-      });
-    }
+    // if (user.status != "active") {
+    //   return res.status(401).json({
+    //     status: "fail",
+    //     error: "Your account is not active yet",
+    //   });
+    // }
 
     const accessToken = generateToken(user);
 
