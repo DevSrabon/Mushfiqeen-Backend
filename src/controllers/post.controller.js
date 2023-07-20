@@ -1,19 +1,14 @@
-const Post = require("../models.js/Posts");
-const User = require("../models.js/Users");
+const {
+  createPostService,
+  getPostService,
+  findByUserId,
+  findByPostId,
+} = require("../services/post.service");
 
 exports.createPost = async (req, res) => {
   try {
-    const newPost = new Post({ ...req.body, user: req.user.userId });
-    const post = await newPost.save();
-    await User.updateOne(
-      { _id: req.user.userId },
-      {
-        $push: {
-          posts: post._id,
-        },
-      }
-    );
-    res.status(200).json({
+    await createPostService(req);
+    res.status(201).json({
       message: "Post was inserted successfully!",
     });
   } catch (error) {
@@ -23,9 +18,60 @@ exports.createPost = async (req, res) => {
     });
   }
 };
+exports.createLikes = async (req, res) => {
+  const postId = req.params.id;
+  const userId = req.user.userId;
+  try {
+    const post = await findByPostId(postId);
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    const user = await findByUserId(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const hasLiked = post.likers.includes(userId);
+
+    if (hasLiked) {
+      post.likers = post.likers.filter(
+        (likerId) => likerId.toString() !== userId
+      );
+      post.likes--;
+    } else {
+      post.likers.push(userId);
+      post.likes++;
+    }
+
+    await post.save();
+
+    return res
+      .status(200)
+      .json({ message: "Like status updated successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "There was a server side error!" });
+  }
+};
+
+// exports.createLikes = async (req, res) => {
+//   try {
+//     await likesService(req);
+//     res.status(201).json({
+//       message: "Likes was updated successfully!",
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({
+//       error: "There was a server side error!",
+//     });
+//   }
+// };
+
 exports.getPost = async (req, res) => {
   try {
-    const post = await Post.find({}).populate("user", "-password");
+    const post = await getPostService();
     res.status(200).json({
       message: "success",
       data: post,

@@ -20,6 +20,11 @@ const postSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    likers: {
+      type: [mongoose.Schema.Types.ObjectId],
+      default: [],
+      ref: "User",
+    },
   },
   {
     timestamps: true,
