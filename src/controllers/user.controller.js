@@ -16,7 +16,6 @@ exports.signup = async (req, res) => {
     res.status(200).json({
       status: "success",
       message: "Successfully signed up",
-      data: user,
       accessToken,
     });
   } catch (error) {
@@ -247,14 +246,14 @@ exports.login = async (req, res) => {
       });
     }
 
-    const token = generateToken(user);
+    const accessToken = generateToken(user);
 
     const { password: pwd, ...others } = user.toObject();
 
     res.status(200).json({
       status: "success",
-      message: "Successfully login up",
-      data: { user: others, token },
+      message: "Successfully login",
+      accessToken,
     });
   } catch (error) {
     console.log({ error });
