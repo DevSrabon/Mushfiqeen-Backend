@@ -20,10 +20,10 @@ const userSchema = new mongoose.Schema(
         validator: (value) =>
           validator.isStrongPassword(value, {
             minLength: 6,
-            minLowerCase: 3,
-            minNumbers: 1,
-            minUpperCase: 1,
-            minSymbols: 1,
+            // minLowerCase: 3,
+            // minNumbers: 1,
+            // minUpperCase: 1,
+            // minSymbols: 1,
           }),
         message: "Password {VALUE} is not strong enough",
       },
@@ -73,6 +73,7 @@ const userSchema = new mongoose.Schema(
       default: "inactive",
       enum: ["active", "inactive", "blocked"],
     },
+    posts: [{ type: mongoose.Types.ObjectId, ref: "Post" }],
     confirmationToken: String,
     confirmationTokenExpire: String,
     passwordChangeAt: Date,
