@@ -1,3 +1,4 @@
+const User = require("../models.js/Users");
 const {
   signupService,
   findUserByEmail,
@@ -185,7 +186,6 @@ exports.resetPassword = async (req, res) => {
     user.resetPasswordToken = undefined;
     user.resetPasswordExpires = undefined;
 
-    // Save the updated user
     await user.save();
 
     res.status(200).json({
@@ -198,17 +198,6 @@ exports.resetPassword = async (req, res) => {
       status: "fail",
       error: error.message,
     });
-  }
-};
-
-exports.deleteAllUsers = async (req, res) => {
-  try {
-    await deleteAll();
-    res.status(200).json({
-      status: "success",
-    });
-  } catch (error) {
-    console.log(error);
   }
 };
 
@@ -288,5 +277,34 @@ exports.getToken = async (req, res) => {
       message: "Internal Server Error",
       error: error.message,
     });
+  }
+};
+
+exports.getUser = async (req, res) => {
+  console.log(req);
+  try {
+    const { email } = req.params;
+    const user = await findUserByEmail(email);
+    res.status(200).json({
+      status: "success",
+      data: user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
+exports.deleteAllUsers = async (req, res) => {
+  try {
+    await deleteAll();
+    res.status(200).json({
+      status: "success",
+    });
+  } catch (error) {
+    console.log(error);
   }
 };
