@@ -34,5 +34,5 @@ exports.getPostService = async () => {
   return await Post.find({})
     .populate("user", "-password -__v")
     .populate("likers", "-password -__v")
-    .sort({ updatedAt: -1 });
+    .sort({ createdAt: -1 });
 };
