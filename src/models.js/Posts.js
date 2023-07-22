@@ -7,15 +7,22 @@ const postSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    user: { type: mongoose.Types.ObjectId, ref: "User" },
-    comments: {
-      type: "object",
-      properties: {
-        commentId: { type: "number" },
-        userName: { type: "string" },
-        comment: { type: "string" },
-      },
+    user: {
+      type: [mongoose.Schema.Types.ObjectId],
+      default: [],
+      ref: "User",
     },
+
+    comments: [
+      {
+        userId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+        comment: String,
+      },
+    ],
+
     likes: {
       type: Number,
       default: 0,
