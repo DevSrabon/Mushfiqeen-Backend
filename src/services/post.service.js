@@ -47,10 +47,14 @@ exports.findByPostId = async (id) => {
 };
 
 exports.getPostService = async () => {
+  const parsedLimit = parseInt(limit, 10) || 10;
+  const parsedSkip = parseInt(skip, 10) || 0;
   const post = await Post.find({})
     .populate("user", "-password -__v -posts -comments")
     .select("-comments")
-    .sort({ createdAt: -1 });
+    .sort({ createdAt: -1 })
+    .skip(parsedSkip)
+    .limit(parsedLimit);
 
   return post;
 };
