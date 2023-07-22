@@ -74,6 +74,7 @@ const userSchema = new mongoose.Schema(
       enum: ["active", "inactive", "blocked"],
     },
     posts: [{ type: mongoose.Types.ObjectId, ref: "Post" }],
+    comments: [{ type: mongoose.Types.ObjectId, ref: "Post" }],
     confirmationToken: String,
     confirmationTokenExpire: String,
     passwordChangeAt: Date,

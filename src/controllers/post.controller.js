@@ -3,6 +3,7 @@ const {
   getPostService,
   findByUserId,
   findByPostId,
+  createCommentService,
 } = require("../services/post.service");
 
 exports.createPost = async (req, res) => {
@@ -68,6 +69,21 @@ exports.createLikes = async (req, res) => {
 //     });
 //   }
 // };
+
+exports.createComment = async (req, res) => {
+  try {
+    const comments = await createCommentService(req);
+    res.status(201).json({
+      message: "Post was inserted successfully!",
+      comments,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: "There was a server side error!",
+    });
+  }
+};
 
 exports.getPost = async (req, res) => {
   try {

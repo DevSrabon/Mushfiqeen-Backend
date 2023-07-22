@@ -16,6 +16,22 @@ exports.createPostService = async (req) => {
   return post;
 };
 
+exports.createCommentService = async (req) => {
+  const post = await Post.findById(req.params.id);
+  const { comment } = req.body;
+  post.comments.push({ comment, userId: req.params.id });
+  await post.save();
+  await User.updateOne(
+    { _id: req.user.userId },
+    {
+      $push: {
+        comments: post._id,
+      },
+    }
+  );
+  return post;
+};
+
 // exports.likesService = async (req) => {
 //   return await Post.findOneAndUpdate(
 //     { _id: req.params.id },
