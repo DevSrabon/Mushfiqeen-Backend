@@ -19,7 +19,7 @@ exports.createPostService = async (req) => {
 exports.createCommentService = async (req) => {
   const post = await Post.findById(req.params.id);
   const { comment } = req.body;
-  post.comments.push({ comment, userId: req.params.id });
+  post.comments.push({ comment, userId: req.user.userId });
   await post.save();
   await User.updateOne(
     { _id: req.user.userId },
@@ -47,8 +47,18 @@ exports.findByPostId = async (id) => {
 };
 
 exports.getPostService = async () => {
-  return await Post.find({})
-    .populate("user", "-password -__v")
-    .populate("likers", "-password -__v")
+  const post = await Post.find({})
+    .populate("user", "-password -__v -posts -comments")
+    .select("-comments -likers")
     .sort({ createdAt: -1 });
+
+  return post;
+};
+exports.getCommentsService = async (req) => {
+  const post = await Post.findById(req.params.id)
+    .populate("comments.userId", "-password -__v -posts -comments")
+    .lean();
+  post.comments.sort((a, b) => b.createdAt - a.createdAt);
+
+  return post;
 };

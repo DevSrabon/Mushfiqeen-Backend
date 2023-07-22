@@ -4,6 +4,7 @@ const {
   findByUserId,
   findByPostId,
   createCommentService,
+  getCommentsService,
 } = require("../services/post.service");
 
 exports.createPost = async (req, res) => {
@@ -75,7 +76,6 @@ exports.createComment = async (req, res) => {
     const comments = await createCommentService(req);
     res.status(201).json({
       message: "Post was inserted successfully!",
-      comments,
     });
   } catch (error) {
     console.log(error);
@@ -88,6 +88,21 @@ exports.createComment = async (req, res) => {
 exports.getPost = async (req, res) => {
   try {
     const post = await getPostService();
+    res.status(200).json({
+      message: "success",
+      data: post,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: "There was a server side error!",
+    });
+  }
+};
+
+exports.getComments = async (req, res) => {
+  try {
+    const post = await getCommentsService(req);
     res.status(200).json({
       message: "success",
       data: post,
