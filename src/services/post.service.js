@@ -49,7 +49,7 @@ exports.findByPostId = async (id) => {
 exports.getPostService = async () => {
   const post = await Post.find({})
     .populate("user", "-password -__v -posts -comments")
-    .select("-comments -likers")
+    .select("-comments")
     .sort({ createdAt: -1 });
 
   return post;
