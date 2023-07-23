@@ -58,7 +58,7 @@ exports.getPostService = async (req) => {
 
   const count = await Post.estimatedDocumentCount();
 
-  return { data: post, total: count };
+  return { post, count };
 };
 exports.getCommentsService = async (req) => {
   const post = await Post.findById(req.params.id)
