@@ -87,10 +87,12 @@ exports.createComment = async (req, res) => {
 
 exports.getPost = async (req, res) => {
   try {
-    const post = await getPostService(req);
+    const posts = await getPostService(req);
+    const { post, count: total } = posts;
     res.status(200).json({
       message: "success",
-      post,
+      data: post,
+      total,
     });
   } catch (error) {
     console.log(error);
