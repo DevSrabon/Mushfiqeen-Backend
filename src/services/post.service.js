@@ -46,9 +46,9 @@ exports.findByPostId = async (id) => {
   return await Post.findById(id);
 };
 
-exports.getPostService = async () => {
-  const parsedLimit = parseInt(limit, 10) || 10;
-  const parsedSkip = parseInt(skip, 10) || 0;
+exports.getPostService = async (req) => {
+  const parsedLimit = parseInt(req.query.limit);
+  const parsedSkip = parseInt(req.query.skip);
   const post = await Post.find({})
     .populate("user", "-password -__v -posts -comments")
     .select("-comments")
@@ -56,7 +56,9 @@ exports.getPostService = async () => {
     .skip(parsedSkip)
     .limit(parsedLimit);
 
-  return post;
+  const count = await Post.estimatedDocumentCount();
+
+  return { data: post, total: count };
 };
 exports.getCommentsService = async (req) => {
   const post = await Post.findById(req.params.id)

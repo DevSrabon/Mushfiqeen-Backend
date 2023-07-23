@@ -90,7 +90,7 @@ exports.getPost = async (req, res) => {
     const post = await getPostService(req);
     res.status(200).json({
       message: "success",
-      data: post,
+      post,
     });
   } catch (error) {
     console.log(error);
