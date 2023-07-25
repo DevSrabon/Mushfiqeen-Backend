@@ -32,12 +32,76 @@ exports.createCommentService = async (req) => {
   return post;
 };
 
-// exports.likesService = async (req) => {
-//   return await Post.findOneAndUpdate(
-//     { _id: req.params.id },
-//     { $inc: { likes: 1 } }
-//   );
-// };
+exports.addCommentLikeService = async (postId, commentId, userId) => {
+  try {
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      throw new Error("Post not found");
+    }
+
+    const comment = post.comments.id(commentId);
+
+    if (!comment) {
+      throw new Error("Comment not found");
+    }
+
+    const userLiked = comment.likes.includes(userId);
+
+    if (userLiked) {
+      comment.likes = comment.likes.filter(
+        (id) => id.toString() !== userId.toString()
+      );
+    } else {
+      comment.likes.push(userId);
+    }
+
+    comment.commentLikes = comment.likes.length;
+
+    await post.save();
+
+    return post;
+  } catch (error) {
+    throw error;
+  }
+};
+
+exports.createReplyService = async (req) => {
+  const postId = req.params.id;
+  const { commentId, replyText } = req.body;
+
+  try {
+    // Find the post by its _id
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      throw new Error("Post not found");
+    }
+
+    // Find the comment within the comments array
+    const comment = post.comments.id(commentId);
+
+    if (!comment) {
+      throw new Error("Comment not found");
+    }
+
+    // Add the reply to the replies array of the comment
+    comment.replies.push({
+      userId: req.user.userId,
+      reply: replyText,
+    });
+
+    // Update the commentsLength property
+    post.commentsLength = post.comments.length;
+
+    // Save the post to persist the changes
+    await post.save();
+
+    return post;
+  } catch (error) {
+    throw error;
+  }
+};
 
 exports.findByUserId = async (id) => {
   return await User.findById(id);

@@ -10,7 +10,8 @@ exports.createBayan = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      error: "There was a server side error!",
+      error: error.message,
+      message: "There was a server side error!",
     });
   }
 };
@@ -29,7 +30,8 @@ exports.getBayan = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      error: "There was a server side error!",
+      error: error.message,
+      message: "There was a server side error!",
     });
   }
 };
