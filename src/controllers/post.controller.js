@@ -146,7 +146,7 @@ exports.addCommentLikes = async (req, res) => {
     const post = await addCommentLikeService(postId, commentId, userId);
     return res
       .status(201)
-      .json({ message: "Comment like/unlike added successfully", post });
+      .json({ message: "Comment like/unlike added successfully" });
   } catch (error) {
     return res.status(500).json({
       error: error.message,
