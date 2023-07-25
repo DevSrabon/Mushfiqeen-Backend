@@ -126,8 +126,9 @@ exports.getPostService = async (req) => {
 };
 exports.getCommentsService = async (req) => {
   const post = await Post.findById(req.params.id)
-    .populate("user", "-password -__v -posts -comments")
-    .populate("comments.userId", "-password -__v -posts -comments")
+    .populate("user", "fullName email")
+    .populate("comments.userId", "fullName email")
+    .populate("comments.replies.userId", "fullName email")
     .lean();
   post.comments.sort((a, b) => b.createdAt - a.createdAt);
 
