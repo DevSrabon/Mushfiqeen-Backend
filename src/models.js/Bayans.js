@@ -11,6 +11,11 @@ const bayanSchema = new mongoose.Schema(
     date: {
       type: String,
     },
+    lan: {
+      type: String,
+      enum: ["BN", "EN", "AR"],
+      default: "BN",
+    },
   },
   {
     timestamps: true,

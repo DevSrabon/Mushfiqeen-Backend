@@ -18,6 +18,25 @@ const postSchema = new mongoose.Schema(
         },
         comment: String,
         createdAt: { type: Date, default: Date.now },
+        replies: [
+          {
+            userId: {
+              type: mongoose.Schema.Types.ObjectId,
+              ref: "User",
+            },
+            reply: String,
+            createdAt: { type: Date, default: Date.now },
+          },
+        ],
+        likes: {
+          type: [mongoose.Schema.Types.ObjectId],
+          default: [],
+          ref: "User",
+        },
+        commentLikes: {
+          type: Number,
+          default: 0,
+        },
       },
     ],
     commentsLength: {
@@ -28,7 +47,6 @@ const postSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-
     likers: {
       type: [mongoose.Schema.Types.ObjectId],
       default: [],

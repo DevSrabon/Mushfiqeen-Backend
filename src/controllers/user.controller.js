@@ -22,7 +22,7 @@ exports.signup = async (req, res) => {
   } catch (error) {
     res.status(400).json({
       status: "fail",
-      error,
+      error: error.message,
     });
   }
 };
@@ -67,7 +67,7 @@ exports.emailVerification = async (req, res) => {
     console.log({ error });
     res.status(400).json({
       status: "fail",
-      error,
+      error: error.message,
     });
   }
 };
@@ -248,7 +248,7 @@ exports.login = async (req, res) => {
     console.log({ error });
     res.status(400).json({
       status: "fail",
-      error,
+      error: error.message,
     });
   }
 };

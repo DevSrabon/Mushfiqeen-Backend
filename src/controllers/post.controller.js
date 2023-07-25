@@ -5,6 +5,8 @@ const {
   findByPostId,
   createCommentService,
   getCommentsService,
+  createReplyService,
+  addCommentLikeService,
 } = require("../services/post.service");
 
 exports.createPost = async (req, res) => {
@@ -16,7 +18,8 @@ exports.createPost = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      error: "There was a server side error!",
+      error: error.message,
+      message: "There was a server side error!",
     });
   }
 };
@@ -67,6 +70,7 @@ exports.createLikes = async (req, res) => {
 //     console.log(error);
 //     res.status(500).json({
 //       error: "There was a server side error!",
+// message: error.message;
 //     });
 //   }
 // };
@@ -75,12 +79,13 @@ exports.createComment = async (req, res) => {
   try {
     const comments = await createCommentService(req);
     res.status(201).json({
-      message: "Post was inserted successfully!",
+      message: "Comment was inserted successfully!",
     });
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      error: "There was a server side error!",
+      error: error.message,
+      message: "There was a server side error!",
     });
   }
 };
@@ -97,7 +102,8 @@ exports.getPost = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      error: "There was a server side error!",
+      error: error.message,
+      message: "There was a server side error!",
     });
   }
 };
@@ -112,7 +118,39 @@ exports.getComments = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      error: "There was a server side error!",
+      error: error.message,
+      message: "There was a server side error!",
+    });
+  }
+};
+
+exports.addReplies = async (req, res) => {
+  try {
+    const comments = await createReplyService(req);
+    res.status(201).json({
+      message: "Reply was inserted successfully!",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: error.message,
+      message: "There was a server side error!",
+    });
+  }
+};
+
+exports.addCommentLikes = async (req, res) => {
+  const { postId, commentId } = req.params;
+  const userId = req.user.userId;
+  try {
+    const post = await addCommentLikeService(postId, commentId, userId);
+    return res
+      .status(201)
+      .json({ message: "Comment like/unlike added successfully", post });
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+      message: "There was a server side error!",
     });
   }
 };
