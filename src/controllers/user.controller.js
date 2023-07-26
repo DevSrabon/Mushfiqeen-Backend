@@ -4,6 +4,7 @@ const {
   deleteAll,
   findUserByToken,
   resetPasswordByToken,
+  findByJwt,
 } = require("../services/user.service");
 const { verifyEmail } = require("../utils/emailVerification");
 const { generateToken } = require("../utils/token");
@@ -277,7 +278,7 @@ exports.getToken = async (req, res) => {
   try {
     const { email } = req.user;
 
-    const user = await findUserByEmail(email);
+    const user = await findByJwt(email);
     if (user) {
       const accessToken = generateToken(user);
       res.status(200).json({
