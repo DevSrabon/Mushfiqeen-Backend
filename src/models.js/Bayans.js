@@ -7,15 +7,18 @@ const bayanSchema = new mongoose.Schema(
       required: true,
     },
 
-    user: { type: mongoose.Types.ObjectId, ref: "User" },
     date: {
       type: String,
     },
-    lan: {
+    place: {
       type: String,
-      enum: ["BN", "EN", "AR"],
+    },
+    lang: {
+      type: String,
+      enum: ["BN", "EN", "AR", "FR", "UR"],
       default: "BN",
     },
+    user: { type: mongoose.Types.ObjectId, ref: "User" },
   },
   {
     timestamps: true,

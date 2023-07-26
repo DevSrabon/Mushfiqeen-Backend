@@ -18,10 +18,7 @@ exports.createBayan = async (req, res) => {
 
 exports.getBayan = async (req, res) => {
   try {
-    const get = await Bayan.find({}).populate(
-      "user",
-      "-password -__v -posts -comments"
-    );
+    const get = await Bayan.find({}).populate("user", "fullName email");
 
     res.status(200).json({
       status: "success",
