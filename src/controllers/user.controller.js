@@ -11,32 +11,8 @@ const { generateToken } = require("../utils/token");
 exports.signup = async (req, res) => {
   try {
     const user = await signupService(req.body);
-    const accessToken = generateToken(user);
-
-    res.status(200).json({
-      status: "success",
-      message: "Successfully signed up",
-      accessToken,
-    });
-  } catch (error) {
-    res.status(400).json({
-      status: "fail",
-      error: error.message,
-    });
-  }
-};
-
-exports.emailVerification = async (req, res) => {
-  try {
-    const user = await signupService(req.body);
-
     const token = user.generateConfirmationToken();
-
     await user.save({ validateBeforeSave: false });
-
-    const link = `${req.protocol}://${req.get("host")}${
-      req.originalUrl
-    }/confirmation/${token}`;
 
     const sendMailBody = {
       email: user?.email,
@@ -45,8 +21,8 @@ exports.emailVerification = async (req, res) => {
         <div style="font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px;">
           <h1 style="color: #007bff;">Email Verification</h1>
           <p style="font-size: 16px;">Dear ${user?.fullName},</p>
-          <p style="font-size: 16px;">Thank you for creating your account. Please click the link below to verify your email:</p>
-          <a href=${link} style="display: block; margin-top: 15px; padding: 10px 20px; background-color: #007bff; color: #fff; text-align: center; text-decoration: none; border-radius: 4px;">Verify Email</a>
+          <p style="font-size: 16px;">Thank you for creating your account. Please copy the code below and paste it into verify code to verify your email:</p>
+          <p style="display: block; margin-top: 15px; padding: 10px 20px; background-color: #007bff; color: #fff; text-align: center; text-decoration: none; border-radius: 4px;">${token}</p>
           <p style="font-size: 16px; margin-top: 10px;">
           If you did not create this account, please ignore this email. Your account will not be activated.
         </p>
@@ -55,22 +31,64 @@ exports.emailVerification = async (req, res) => {
         </div>
       `,
     };
-
     await verifyEmail(sendMailBody);
-
     res.status(200).json({
       status: "success",
       message: "Successfully signed up",
-      data: user,
     });
   } catch (error) {
-    console.log({ error });
     res.status(400).json({
       status: "fail",
       error: error.message,
     });
   }
 };
+
+// exports.emailVerification = async (req, res) => {
+//   try {
+//     const user = await signupService(req.body);
+
+//     const token = user.generateConfirmationToken();
+
+//     await user.save({ validateBeforeSave: false });
+
+//     const link = `${req.protocol}://${req.get("host")}${
+//       req.originalUrl
+//     }/confirmation/${token}`;
+
+//     const sendMailBody = {
+//       email: user?.email,
+//       subject: "Email Verification",
+//       html: `
+//         <div style="font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px;">
+//           <h1 style="color: #007bff;">Email Verification</h1>
+//           <p style="font-size: 16px;">Dear ${user?.fullName},</p>
+//           <p style="font-size: 16px;">Thank you for creating your account. Please click the link below to verify your email:</p>
+//           <a href=${link} style="display: block; margin-top: 15px; padding: 10px 20px; background-color: #007bff; color: #fff; text-align: center; text-decoration: none; border-radius: 4px;">Verify Email</a>
+//           <p style="font-size: 16px; margin-top: 10px;">
+//           If you did not create this account, please ignore this email. Your account will not be activated.
+//         </p>
+//           <p style="font-size: 16px;">Best regards,</p>
+//           <p style="font-size: 16px;">Musfiqeen</p>
+//         </div>
+//       `,
+//     };
+
+//     await verifyEmail(sendMailBody);
+
+//     res.status(200).json({
+//       status: "success",
+//       message: "Successfully signed up",
+//       data: user,
+//     });
+//   } catch (error) {
+//     console.log({ error });
+//     res.status(400).json({
+//       status: "fail",
+//       error: error.message,
+//     });
+//   }
+// };
 
 exports.confirmEmail = async (req, res) => {
   try {
@@ -97,12 +115,13 @@ exports.confirmEmail = async (req, res) => {
     user.confirmationToken = undefined;
     user.confirmationTokenExpire = undefined;
     user.save({ validateBeforeSave: false });
-
     if (user) {
+      const accessToken = generateToken(user);
       res.status(200).json({
         status: "success",
         message: "Successfully activated your account",
         data: user,
+        accessToken,
       });
     } else {
       res.status(404).json({
@@ -133,9 +152,9 @@ exports.forgotPassword = async (req, res) => {
 
     await user.save();
 
-    const resetLink = `${req.protocol}://${req.get("host")}${
-      req.originalUrl
-    }/reset-password/${resetToken}`;
+    // const resetLink = `${req.protocol}://${req.get("host")}${
+    //   req.originalUrl
+    // }/reset-password/${resetToken}`;
 
     const sendMailBody = {
       email: user?.email,
@@ -145,9 +164,9 @@ exports.forgotPassword = async (req, res) => {
           <h1 style="color: #007bff;">Account Reset</h1>
           <p style="font-size: 16px;">Dear ${user?.fullName},</p>
           <p style="font-size: 16px;">
-          We received a request to reset your account password. Please click the link below to reset your password:
+          We received a request to reset your account password. Please copy the code below and paste it into verify code to reset your password:
           </p>
-          <a href=${resetLink} style="display: block; margin-top: 15px; padding: 10px 20px; background-color: #007bff; color: #fff; text-align: center; text-decoration: none; border-radius: 4px;">Reset Password</a>
+          <p style="display: block; margin-top: 15px; padding: 10px 20px; background-color: #007bff; color: #fff; text-align: center; text-decoration: none; border-radius: 4px;">${resetToken}</a>
           <p style="font-size: 16px; margin-top: 10px;">
           If you did not request this password reset, please ignore this email. Your account is secure.
           </p>
@@ -183,14 +202,15 @@ exports.resetPassword = async (req, res) => {
     }
 
     user.password = password;
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpires = undefined;
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
 
     await user.save();
-
+    const accessToken = generateToken(user);
     res.status(200).json({
       status: "success",
       message: "Password reset successfully",
+      accessToken,
     });
   } catch (error) {
     console.log({ error });
@@ -228,12 +248,12 @@ exports.login = async (req, res) => {
         error: "Password is not correct",
       });
     }
-    // if (user.status != "active") {
-    //   return res.status(401).json({
-    //     status: "fail",
-    //     error: "Your account is not active yet",
-    //   });
-    // }
+    if (user.status === "inactive") {
+      return res.status(401).json({
+        status: "fail",
+        error: "Your account is not active yet",
+      });
+    }
 
     const accessToken = generateToken(user);
 

@@ -15,18 +15,18 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: [true, "Password is required"],
-
-      validate: {
-        validator: (value) =>
-          validator.isStrongPassword(value, {
-            minLength: 6,
-            // minLowerCase: 3,
-            // minNumbers: 1,
-            // minUpperCase: 1,
-            // minSymbols: 1,
-          }),
-        message: "Password {VALUE} is not strong enough",
-      },
+      minlength: [6, "Minimum length must be at list 6 character"],
+      // validate: {
+      //   validator: (value) =>
+      //     validator.isStrongPassword(value, {
+      //       minLength: 6,
+      //       // minLowerCase: 3,
+      //       // minNumbers: 1,
+      //       // minUpperCase: 1,
+      //       // minSymbols: 1,
+      //     }),
+      //   message: "Password {VALUE} is not strong enough",
+      // },
     },
     confirmPassword: {
       type: String,
@@ -106,7 +106,7 @@ userSchema.methods.comparePassword = function (password, hash) {
 };
 
 userSchema.methods.generateConfirmationToken = function () {
-  const token = crypto.randomBytes(32).toString("hex");
+  const token = Math.floor(Math.random() * 90000) + 10000;
   this.confirmationToken = token;
   const date = new Date();
   date.setDate(date.getDate() + 1);
@@ -115,7 +115,7 @@ userSchema.methods.generateConfirmationToken = function () {
 };
 
 userSchema.methods.generateResetToken = function () {
-  const token = crypto.randomBytes(32).toString("hex");
+  const token = Math.floor(Math.random() * 90000) + 10000;
   this.passwordResetToken = token;
   const date = new Date();
   date.setDate(date.getDate() + 1);

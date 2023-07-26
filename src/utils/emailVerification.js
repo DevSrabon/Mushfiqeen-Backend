@@ -1,10 +1,6 @@
 const nodemailer = require("nodemailer");
 
 exports.verifyEmail = async (sendMailBody) => {
-  console.log(
-    "🚀 ~ file: emailVerification.js:4 ~ exports.verifyEmail= ~ sendMail:",
-    sendMailBody
-  );
   try {
     let transporter = nodemailer.createTransport({
       service: "gmail",
