@@ -8,7 +8,9 @@ exports.signupService = async (userInfo) => {
 exports.findUserByEmail = async (email) => {
   return await User.findOne({ email }).populate("posts");
 };
-
+exports.findByJwt = async (email) => {
+  return await User.findOne({ email }).select("email role fullName status");
+};
 exports.findUserByToken = async (token) => {
   return await User.findOne({ confirmationToken: token });
 };
