@@ -16,13 +16,7 @@ const postSchema = new mongoose.Schema(
           type: mongoose.Schema.Types.ObjectId,
           ref: "User",
         },
-        comment: {
-          type: String,
-          required: true,
-          trim: true,
-          minlength: 2,
-          maxlength: 200,
-        },
+        comment: String,
         createdAt: { type: Date, default: Date.now },
         replies: [
           {
@@ -30,13 +24,7 @@ const postSchema = new mongoose.Schema(
               type: mongoose.Schema.Types.ObjectId,
               ref: "User",
             },
-            reply: {
-              type: String,
-              required: true,
-              trim: true,
-              minlength: 2,
-              maxlength: 200,
-            },
+            reply: String,
             createdAt: { type: Date, default: Date.now },
           },
         ],

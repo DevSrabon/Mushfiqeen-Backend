@@ -20,7 +20,7 @@ exports.createCommentService = async (req) => {
   const post = await Post.findById(req.params.id);
   const { comment } = req.body;
   post.comments.push({ comment, userId: req.user.userId });
-  await post.save({ validateBeforeSave: false });
+  await post.save();
   await User.updateOne(
     { _id: req.user.userId },
     {
@@ -58,7 +58,7 @@ exports.addCommentLikeService = async (postId, commentId, userId) => {
 
     comment.commentLikes = comment.likes.length;
 
-    await post.save({ validateBeforeSave: false });
+    await post.save();
 
     return post;
   } catch (error) {
@@ -68,29 +68,34 @@ exports.addCommentLikeService = async (postId, commentId, userId) => {
 
 exports.createReplyService = async (req) => {
   const postId = req.params.id;
-  const { commentId, reply } = req.body;
+  const { commentId, replyText } = req.body;
 
   try {
+    // Find the post by its _id
     const post = await Post.findById(postId);
 
     if (!post) {
       throw new Error("Post not found");
     }
 
+    // Find the comment within the comments array
     const comment = post.comments.id(commentId);
 
     if (!comment) {
       throw new Error("Comment not found");
     }
 
+    // Add the reply to the replies array of the comment
     comment.replies.push({
       userId: req.user.userId,
-      reply,
+      reply: replyText,
     });
 
+    // Update the commentsLength property
     post.commentsLength = post.comments.length;
 
-    await post.save({ validateBeforeSave: false });
+    // Save the post to persist the changes
+    await post.save();
 
     return post;
   } catch (error) {
@@ -101,7 +106,6 @@ exports.createReplyService = async (req) => {
 exports.findByUserId = async (id) => {
   return await User.findById(id);
 };
-
 exports.findByPostId = async (id) => {
   return await Post.findById(id);
 };
@@ -120,7 +124,6 @@ exports.getPostService = async (req) => {
 
   return { post, count };
 };
-
 exports.getCommentsService = async (req) => {
   const post = await Post.findById(req.params.id)
     .populate("user", "fullName email")
