@@ -1,4 +1,3 @@
-const User = require("../models.js/Users");
 const {
   signupService,
   findUserByEmail,
@@ -26,6 +25,7 @@ exports.signup = async (req, res) => {
     });
   }
 };
+
 exports.emailVerification = async (req, res) => {
   try {
     const user = await signupService(req.body);

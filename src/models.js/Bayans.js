@@ -4,14 +4,20 @@ const bayanSchema = new mongoose.Schema(
   {
     description: {
       type: String,
-      required: true,
+      require: true,
+      minLength: 6,
+      maxLength: 1000,
     },
 
     date: {
-      type: String,
+      type: Date,
+      require: true,
     },
     place: {
       type: String,
+      require: true,
+      minLength: 6,
+      maxLength: 100,
     },
     lang: {
       type: String,

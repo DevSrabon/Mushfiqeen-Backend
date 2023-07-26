@@ -5,5 +5,5 @@ const { createBayan, getBayan } = require("../controllers/bayan.controller");
 const router = express.Router();
 router.use(verifyToken);
 router.post("/create", createBayan);
-router.get("/get", getBayan);
+router.get("/get/:lang", getBayan);
 module.exports = router;
