@@ -11,12 +11,7 @@ const { generateToken } = require("../utils/token");
 exports.signup = async (req, res) => {
   try {
     const user = await signupService(req.body);
-    const accessToken = generateToken(user);
     const token = user.generateConfirmationToken();
-    console.log(
-      "🚀 ~ file: user.controller.js:16 ~ exports.signup= ~ token:",
-      token
-    );
     await user.save({ validateBeforeSave: false });
 
     const sendMailBody = {
@@ -40,8 +35,6 @@ exports.signup = async (req, res) => {
     res.status(200).json({
       status: "success",
       message: "Successfully signed up",
-      accessToken,
-      user,
     });
   } catch (error) {
     res.status(400).json({
@@ -122,12 +115,13 @@ exports.confirmEmail = async (req, res) => {
     user.confirmationToken = undefined;
     user.confirmationTokenExpire = undefined;
     user.save({ validateBeforeSave: false });
-
     if (user) {
+      const accessToken = generateToken(user);
       res.status(200).json({
         status: "success",
         message: "Successfully activated your account",
         data: user,
+        accessToken,
       });
     } else {
       res.status(404).json({
@@ -212,10 +206,11 @@ exports.resetPassword = async (req, res) => {
     user.passwordResetExpires = undefined;
 
     await user.save();
-
+    const accessToken = generateToken(user);
     res.status(200).json({
       status: "success",
       message: "Password reset successfully",
+      accessToken,
     });
   } catch (error) {
     console.log({ error });
@@ -253,12 +248,12 @@ exports.login = async (req, res) => {
         error: "Password is not correct",
       });
     }
-    // if (user.status != "active") {
-    //   return res.status(401).json({
-    //     status: "fail",
-    //     error: "Your account is not active yet",
-    //   });
-    // }
+    if (user.status === "inactive") {
+      return res.status(401).json({
+        status: "fail",
+        error: "Your account is not active yet",
+      });
+    }
 
     const accessToken = generateToken(user);
 
