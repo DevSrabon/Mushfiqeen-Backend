@@ -121,7 +121,6 @@ exports.confirmEmail = async (req, res) => {
       res.status(200).json({
         status: "success",
         message: "Successfully activated your account",
-        data: user,
         accessToken,
       });
     } else {
@@ -250,6 +249,8 @@ exports.login = async (req, res) => {
       });
     }
     if (user.status === "inactive") {
+      const token = await user.generateConfirmationToken();
+      await user.save({ validateBeforeSave: false });
       const sendMailBody = {
         email: user?.email,
         subject: "Email Verification",
