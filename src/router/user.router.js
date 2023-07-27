@@ -14,7 +14,7 @@ const router = express.Router();
 
 router.post("/signup", signup);
 
-router.get("/signup/confirmation/:token", confirmEmail);
+router.get("/confirm/:email/code/:token", confirmEmail);
 
 router.post("/login", login);
 

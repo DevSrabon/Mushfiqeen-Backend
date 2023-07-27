@@ -11,8 +11,8 @@ exports.findUserByEmail = async (email) => {
 exports.findByJwt = async (email) => {
   return await User.findOne({ email }).select("email role fullName status");
 };
-exports.findUserByToken = async (token) => {
-  return await User.findOne({ confirmationToken: token });
+exports.findUserByToken = async (token, email) => {
+  return await User.findOne({ confirmationToken: token, email });
 };
 exports.resetPasswordByToken = async (resetToken) => {
   return await User.findOne({

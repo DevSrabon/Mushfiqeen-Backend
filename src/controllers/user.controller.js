@@ -93,9 +93,9 @@ exports.signup = async (req, res) => {
 
 exports.confirmEmail = async (req, res) => {
   try {
-    const { token } = req.params;
+    const { token, email } = req.params;
 
-    const user = await findUserByToken(token);
+    const user = await findUserByToken(token, email);
 
     if (!user) {
       return res.status(403).json({
