@@ -116,7 +116,7 @@ exports.getPostService = async (req) => {
   let count;
 
   try {
-    if (id && id !== "undefined") {
+    if (id !== "undefined") {
       const { following } = await User.findById(id);
       post = await Post.find({ user: { $in: following } })
         .populate({
