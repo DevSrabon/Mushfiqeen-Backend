@@ -8,6 +8,9 @@ exports.signupService = async (userInfo) => {
 exports.findUserByEmail = async (email) => {
   return await User.findOne({ email }).populate("posts");
 };
+exports.findUserById = async (id, body) => {
+  return await User.findByIdAndUpdate(id, body);
+};
 exports.findByJwt = async (email) => {
   return await User.findOne({ email }).select("email role fullName status");
 };
