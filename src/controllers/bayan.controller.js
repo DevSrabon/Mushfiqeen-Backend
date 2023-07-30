@@ -19,7 +19,9 @@ exports.createBayan = async (req, res) => {
 exports.getBayan = async (req, res) => {
   try {
     const lang = req.params.lang;
-    const get = await Bayan.find({ lang }).populate("user", "fullName email");
+    const get = await Bayan.find({ lang })
+      .populate("user", "fullName email")
+      .sort({ createdAt: -1 });
 
     res.status(200).json({
       status: "success",
