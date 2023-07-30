@@ -90,6 +90,8 @@ const userSchema = new mongoose.Schema(
       default: "inactive",
       enum: ["active", "inactive", "blocked"],
     },
+    followers: [{ type: mongoose.Types.ObjectId, ref: "User" }],
+    following: [{ type: mongoose.Types.ObjectId, ref: "User" }],
     posts: [{ type: mongoose.Types.ObjectId, ref: "Post" }],
     comments: [{ type: mongoose.Types.ObjectId, ref: "Post" }],
     confirmationToken: String,
@@ -138,6 +140,20 @@ userSchema.methods.generateResetToken = function () {
   date.setDate(date.getDate() + 1);
   this.passwordResetExpires = date;
   return token;
+};
+
+userSchema.methods.addFollower = async function (followerId) {
+  if (!this.followers.includes(followerId)) {
+    this.followers.push(followerId);
+    await this.save();
+  }
+};
+
+userSchema.methods.followUser = async function (userIdToFollow) {
+  if (!this.following.includes(userIdToFollow)) {
+    this.following.push(userIdToFollow);
+    await this.save();
+  }
 };
 
 const User = mongoose.model("User", userSchema);

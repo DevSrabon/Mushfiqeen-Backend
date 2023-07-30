@@ -354,6 +354,35 @@ exports.updateUser = async (req, res) => {
   }
 };
 
+exports.addFollower = async (req, res) => {
+  const { userIdToFollow } = req.params;
+  const currentUserId = req.user.userId;
+
+  try {
+    if (currentUserId === userIdToFollow) {
+      return res.status(400).json({ message: "You cannot follow yourself." });
+    }
+
+    const currentUser = await findUserById(currentUserId);
+    if (!currentUser) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    const userToFollow = await findUserById(userIdToFollow);
+    if (!userToFollow) {
+      return res.status(404).json({ message: "User to follow not found." });
+    }
+
+    await currentUser.followUser(userIdToFollow);
+    await userToFollow.addFollower(currentUserId);
+
+    res.status(200).json({ message: "Successfully followed the user." });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error." });
+  }
+};
+
 exports.deleteAllUsers = async (req, res) => {
   try {
     await deleteAll();

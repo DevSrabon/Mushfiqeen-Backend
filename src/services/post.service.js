@@ -71,30 +71,25 @@ exports.createReplyService = async (req) => {
   const { commentId, replyText } = req.body;
 
   try {
-    // Find the post by its _id
     const post = await Post.findById(postId);
 
     if (!post) {
       throw new Error("Post not found");
     }
 
-    // Find the comment within the comments array
     const comment = post.comments.id(commentId);
 
     if (!comment) {
       throw new Error("Comment not found");
     }
 
-    // Add the reply to the replies array of the comment
     comment.replies.push({
       userId: req.user.userId,
       reply: replyText,
     });
 
-    // Update the commentsLength property
     post.commentsLength = post.comments.length;
 
-    // Save the post to persist the changes
     await post.save();
 
     return post;
@@ -113,17 +108,60 @@ exports.findByPostId = async (id) => {
 exports.getPostService = async (req) => {
   const parsedLimit = parseInt(req.query.limit);
   const parsedSkip = parseInt(req.query.skip);
-  const post = await Post.find({})
-    .populate("user", "-password -__v -posts -comments")
-    .select("-comments")
-    .sort({ createdAt: -1 })
-    .skip(parsedSkip)
-    .limit(parsedLimit);
+  const { id } = req?.query;
 
-  const count = await Post.estimatedDocumentCount();
+  const query = {};
 
-  return { post, count };
+  let post;
+  let count;
+
+  try {
+    if (id) {
+      const { following } = await User.findById(id);
+      g;
+      post = await Post.find({ user: { $in: following } })
+        .populate({
+          path: "user",
+          select: "-password -__v -posts -comments",
+        })
+        .select("-comments")
+        .sort({ createdAt: -1 })
+        .skip(parsedSkip)
+        .limit(parsedLimit);
+
+      const excludedPosts = await Post.find({ user: { $nin: following } })
+        .populate({
+          path: "user",
+          select: "-password -__v -posts -comments",
+        })
+        .select("-comments")
+        .sort({ createdAt: -1 })
+        .skip(parsedSkip)
+        .limit(parsedLimit);
+
+      post = post.concat(excludedPosts);
+      count = await Post.estimatedDocumentCount();
+    } else {
+      post = await Post.find(query)
+        .populate({
+          path: "user",
+          select: "-password -__v -posts -comments",
+        })
+        .select("-comments")
+        .sort({ createdAt: -1 })
+        .skip(parsedSkip)
+        .limit(parsedLimit);
+
+      count = await Post.estimatedDocumentCount();
+    }
+
+    return { post, count };
+  } catch (err) {
+    console.error(err);
+    throw new Error("Error fetching posts.");
+  }
 };
+
 exports.getCommentsService = async (req) => {
   const post = await Post.findById(req.params.id)
     .populate("user", "fullName email")

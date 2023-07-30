@@ -9,8 +9,10 @@ const {
   resetPassword,
   getUser,
   updateUser,
+  addFollower,
 } = require("../controllers/user.controller");
 const verifyToken = require("../middleware/verifyToken");
+
 const router = express.Router();
 
 router.post("/signup", signup);
@@ -28,6 +30,8 @@ router.get("/jwt", verifyToken, getToken);
 router.get("/getUser/:email", getUser);
 
 router.put("/update-user/:id", updateUser);
+
+router.post("/add-follow/:userIdToFollow", verifyToken, addFollower);
 
 router.delete("/delete", deleteAllUsers);
 
