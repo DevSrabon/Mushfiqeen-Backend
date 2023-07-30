@@ -118,7 +118,6 @@ exports.getPostService = async (req) => {
   try {
     if (id) {
       const { following } = await User.findById(id);
-      g;
       post = await Post.find({ user: { $in: following } })
         .populate({
           path: "user",
