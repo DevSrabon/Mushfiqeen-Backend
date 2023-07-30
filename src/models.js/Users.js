@@ -63,10 +63,27 @@ const userSchema = new mongoose.Schema(
     designation: {
       type: String,
       required: false,
+      minLength: [3, "designation must be at least 3 characters"],
+      maxlength: [50, "designation is too large"],
     },
     address: {
       type: String,
       required: false,
+      minLength: [3, "address must be at least 3 characters"],
+      maxlength: [100, "address is too large"],
+    },
+    country: {
+      type: String,
+      required: false,
+    },
+    dateOfBirth: {
+      type: Date,
+      required: false,
+    },
+    bio: {
+      type: String,
+      minLength: [3, "bio must be at least 3 characters"],
+      maxlength: [300, "bio is too large"],
     },
     status: {
       type: String,
