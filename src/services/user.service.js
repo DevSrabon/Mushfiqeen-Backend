@@ -12,7 +12,9 @@ exports.findUserById = async (id, body) => {
   return await User.findByIdAndUpdate(id, body);
 };
 exports.findByJwt = async (email) => {
-  return await User.findOne({ email }).select("email role fullName status");
+  return await User.findOne({ email }).select(
+    "-__V  -posts -comments -password"
+  );
 };
 exports.findUserByToken = async (token, email) => {
   return await User.findOne({ confirmationToken: token, email });
