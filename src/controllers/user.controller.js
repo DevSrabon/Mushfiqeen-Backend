@@ -5,6 +5,7 @@ const {
   findUserByToken,
   resetPasswordByToken,
   findByJwt,
+  findUserById,
 } = require("../services/user.service");
 const { verifyEmail } = require("../utils/emailVerification");
 const { generateToken } = require("../utils/token");
@@ -321,13 +322,28 @@ exports.getToken = async (req, res) => {
 };
 
 exports.getUser = async (req, res) => {
-  console.log(req);
   try {
     const { email } = req.params;
     const user = await findUserByEmail(email);
     res.status(200).json({
       status: "success",
       data: user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+exports.updateUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const body = req.body;
+    await findUserById(id, body);
+    res.status(200).json({
+      status: "success",
     });
   } catch (error) {
     res.status(500).json({

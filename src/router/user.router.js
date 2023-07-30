@@ -8,6 +8,7 @@ const {
   forgotPassword,
   resetPassword,
   getUser,
+  updateUser,
 } = require("../controllers/user.controller");
 const verifyToken = require("../middleware/verifyToken");
 const router = express.Router();
@@ -25,6 +26,8 @@ router.post("/reset-password/:resetToken", resetPassword);
 router.get("/jwt", verifyToken, getToken);
 
 router.get("/getUser/:email", getUser);
+
+router.put("/update-user/:id", updateUser);
 
 router.delete("/delete", deleteAllUsers);
 
