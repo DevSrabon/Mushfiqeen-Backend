@@ -300,7 +300,6 @@ exports.getToken = async (req, res) => {
 
     const user = await findByJwt(email);
     if (user) {
-      const accessToken = generateToken(user);
       res.status(200).json({
         status: "success",
         data: user,
@@ -316,7 +315,6 @@ exports.getToken = async (req, res) => {
     res.status(500).json({
       status: "error",
       message: "Internal Server Error",
-      error: error.message,
     });
   }
 };
