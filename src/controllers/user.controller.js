@@ -270,7 +270,7 @@ exports.login = async (req, res) => {
         `,
       };
       await verifyEmail(sendMailBody);
-      return res.status(401).json({
+      return res.status(402).json({
         status: "fail",
         error: "Your account is not active yet",
       });
