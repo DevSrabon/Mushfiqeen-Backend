@@ -5,19 +5,19 @@ const bayanSchema = new mongoose.Schema(
     description: {
       type: String,
       require: [true, "Description is required"],
-      minLength: [2, "Minimum 2 Characters are required"],
+      minLength: [1, "Minimum 1 Characters are required"],
       maxLength: [1000, "Maximum 1000 Characters"],
     },
 
     date: {
-      type: Date,
-      require: [true, "Date is required"],
+      type: String,
+      require: false,
     },
     place: {
       type: String,
-      require: [true, "Place is required"],
-      minLength: [2, "Minimum 2 Characters are required"],
-      maxLength: [100, "Maximum 100 Characters"],
+      require: false,
+      // minLength: [1, "Minimum 1 Characters are required"],
+      // maxLength: [100, "Maximum 100 Characters"],
     },
     lang: {
       type: String,
