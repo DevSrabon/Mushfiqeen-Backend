@@ -5,7 +5,7 @@ const bayanSchema = new mongoose.Schema(
     description: {
       type: String,
       require: true,
-      minLength: 6,
+      minLength: 2,
       maxLength: 1000,
     },
 
@@ -16,7 +16,7 @@ const bayanSchema = new mongoose.Schema(
     place: {
       type: String,
       require: true,
-      minLength: 6,
+      minLength: 2,
       maxLength: 100,
     },
     lang: {
