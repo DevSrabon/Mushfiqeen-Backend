@@ -11,7 +11,7 @@ const bayanSchema = new mongoose.Schema(
 
     date: {
       type: Date,
-      require: [true, "description is required"],
+      require: [true, "Date is required"],
     },
     place: {
       type: String,
