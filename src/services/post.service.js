@@ -163,7 +163,7 @@ exports.getPostService = async (req) => {
 
 exports.getCommentsService = async (req) => {
   const post = await Post.findById(req.params.id)
-    .populate("user", "fullName email")
+    .populate("user", "fullName email followers following")
     .populate("comments.userId", "fullName email")
     .populate("comments.replies.userId", "fullName email")
     .lean();
