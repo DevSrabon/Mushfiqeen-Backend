@@ -58,6 +58,7 @@ const userSchema = new mongoose.Schema(
     },
     imageURL: {
       type: String,
+      required: [true, "Please provide your Image"],
       validate: [validator.isURL, "Please provide a valid url"],
     },
     designation: {
