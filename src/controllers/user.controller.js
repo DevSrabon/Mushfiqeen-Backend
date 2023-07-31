@@ -303,7 +303,6 @@ exports.getToken = async (req, res) => {
       res.status(200).json({
         status: "success",
         data: user,
-        accessToken,
       });
     } else {
       res.status(404).json({
