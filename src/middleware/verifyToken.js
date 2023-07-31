@@ -21,7 +21,7 @@ module.exports = async (req, res, next) => {
   } catch (error) {
     res.status(403).json({
       status: "fail",
-      error: "Invalid token",
+      error: "You are not logged in Or Invalid token",
     });
   }
 };
