@@ -219,7 +219,7 @@ exports.resetPassword = async (req, res) => {
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
 
-    await user.save();
+    await user.save({ validateBeforeSave: false });
     const accessToken = generateToken(user);
     res.status(200).json({
       status: "success",
