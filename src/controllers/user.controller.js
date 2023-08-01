@@ -39,6 +39,13 @@ exports.signup = async (req, res) => {
       message: "Successfully signed up",
     });
   } catch (error) {
+    if (error.name === "ValidationError") {
+      const message = Object.values(error.errors).map((value) => value.message);
+      return res.status(400).json({
+        error: message,
+      });
+    }
+
     res.status(400).json({
       status: "fail",
       error: error.message,
@@ -184,6 +191,12 @@ exports.forgotPassword = async (req, res) => {
     });
   } catch (error) {
     console.log({ error });
+    if (error.name === "ValidationError") {
+      const message = Object.values(error.errors).map((value) => value.message);
+      return res.status(400).json({
+        error: message,
+      });
+    }
     res.status(400).json({
       status: "fail",
       error: error.message,
@@ -286,7 +299,12 @@ exports.login = async (req, res) => {
       accessToken,
     });
   } catch (error) {
-    console.log({ error });
+    if (error.name === "ValidationError") {
+      const message = Object.values(error.errors).map((value) => value.message);
+      return res.status(400).json({
+        error: message,
+      });
+    }
     res.status(400).json({
       status: "fail",
       error: error.message,
@@ -322,6 +340,12 @@ exports.getUser = async (req, res) => {
   try {
     const { email } = req.params;
     const user = await findUserByEmail(email);
+    if (!user) {
+      return res.status(404).json({
+        status: "error",
+        error: "User Not Found",
+      });
+    }
     res.status(200).json({
       status: "success",
       data: user,
@@ -338,7 +362,13 @@ exports.updateUser = async (req, res) => {
   try {
     const { id } = req.params;
     const body = req.body;
-    await findUserById(id, body);
+    const user = await findUserById(id, body);
+    if (!user) {
+      return res.status(404).json({
+        status: "error",
+        error: "User Not Found",
+      });
+    }
     res.status(200).json({
       status: "success",
     });
