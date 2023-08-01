@@ -6,7 +6,6 @@ const bayanSchema = new mongoose.Schema(
       type: String,
       require: [true, "Description is required"],
       minLength: [1, "Minimum 1 Characters are required"],
-      maxLength: [1000, "Maximum 1000 Characters"],
     },
 
     date: {
