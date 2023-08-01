@@ -146,14 +146,14 @@ userSchema.methods.generateResetToken = function () {
 userSchema.methods.addFollower = async function (followerId) {
   if (!this.followers.includes(followerId)) {
     this.followers.push(followerId);
-    await this.save();
+    await this.save({ validateBeforeSave: false });
   }
 };
 
 userSchema.methods.followUser = async function (userIdToFollow) {
   if (!this.following.includes(userIdToFollow)) {
     this.following.push(userIdToFollow);
-    await this.save();
+    await this.save({ validateBeforeSave: false });
   }
 };
 

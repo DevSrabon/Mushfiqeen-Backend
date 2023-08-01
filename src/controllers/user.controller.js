@@ -404,8 +404,8 @@ exports.addFollower = async (req, res) => {
     await userToFollow.addFollower(currentUserId);
 
     res.status(200).json({ message: "Successfully followed the user." });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Internal server error." });
   }
 };
