@@ -158,7 +158,7 @@ exports.forgotPassword = async (req, res) => {
 
     const resetToken = user.generateResetToken();
 
-    await user.save();
+    await user.save({ validateBeforeSave: false });
 
     // const resetLink = `${req.protocol}://${req.get("host")}${
     //   req.originalUrl
