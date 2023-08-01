@@ -20,7 +20,7 @@ exports.getBayan = async (req, res) => {
   try {
     const lang = req.params.lang;
     const get = await Bayan.find({ lang })
-      .populate("user", "fullName email")
+      .populate("user", "fullName email imageURL")
       .sort({ createdAt: -1 });
 
     res.status(200).json({
