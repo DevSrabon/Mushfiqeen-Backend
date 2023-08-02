@@ -12,9 +12,7 @@ exports.findUserById = async (id, body) => {
   return await User.findByIdAndUpdate(id, body);
 };
 exports.findByJwt = async (email) => {
-  return await User.findOne({ email }).select(
-    "-__V  -posts -comments -password"
-  );
+  return await User.findOne({ email }).select("-__V  -comments -password");
 };
 exports.findUserByToken = async (token, email) => {
   return await User.findOne({ confirmationToken: token, email });
