@@ -27,7 +27,7 @@ router.post("/reset-password/:resetToken", resetPassword);
 
 router.get("/jwt", verifyToken, getToken);
 
-router.get("/getUser/:email", getUser);
+router.get("/getUser/:id", getUser);
 
 router.put("/update-user/:id", updateUser);
 

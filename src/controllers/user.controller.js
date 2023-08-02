@@ -6,6 +6,7 @@ const {
   resetPasswordByToken,
   findByJwt,
   findUserById,
+  findUserByProfile,
 } = require("../services/user.service");
 const { verifyEmail } = require("../utils/emailVerification");
 const { generateToken } = require("../utils/token");
@@ -338,8 +339,8 @@ exports.getToken = async (req, res) => {
 
 exports.getUser = async (req, res) => {
   try {
-    const { email } = req.params;
-    const user = await findUserByEmail(email);
+    const { id } = req.params;
+    const user = await findUserByProfile(id);
     if (!user) {
       return res.status(404).json({
         status: "error",
