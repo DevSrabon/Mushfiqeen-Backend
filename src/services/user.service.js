@@ -6,7 +6,7 @@ exports.signupService = async (userInfo) => {
 };
 
 exports.findUserByProfile = async (id) => {
-  return await User.findOne({ id })
+  return await User.findById(id)
     .populate("posts", "-comments -likers")
     .select("-comments -password");
 };
