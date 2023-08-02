@@ -12,12 +12,14 @@ const bayanSchema = new mongoose.Schema(
       type: String,
       require: false,
     },
+
     place: {
       type: String,
       require: false,
       // minLength: [1, "Minimum 1 Characters are required"],
       // maxLength: [100, "Maximum 100 Characters"],
     },
+
     lang: {
       type: String,
       enum: ["BN", "EN", "AR", "FR", "UR"],
