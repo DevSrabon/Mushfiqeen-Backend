@@ -89,7 +89,7 @@ const userSchema = new mongoose.Schema(
     status: {
       type: String,
       default: "inactive",
-      enum: ["active", "inactive", "blocked"],
+      enum: ["active", "inactive", "author", "admin", "blocked"],
     },
     followers: [{ type: mongoose.Types.ObjectId, ref: "User" }],
     following: [{ type: mongoose.Types.ObjectId, ref: "User" }],
