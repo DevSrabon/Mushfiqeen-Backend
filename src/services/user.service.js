@@ -4,7 +4,9 @@ exports.signupService = async (userInfo) => {
   const user = await User.create(userInfo);
   return user;
 };
-
+exports.findUserByEmail = async (email) => {
+  return await User.findOne({ email }).populate("posts");
+};
 exports.findUserByProfile = async (id) => {
   return await User.findById(id)
     .populate("posts", "-comments -likers")
