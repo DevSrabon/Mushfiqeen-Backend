@@ -9,7 +9,14 @@ exports.findUserByEmail = async (email) => {
 };
 exports.findUserByProfile = async (id) => {
   return await User.findById(id)
-    .populate("posts", "-comments -likers")
+    .populate({
+      path: "posts",
+      select: "-comments -likers",
+      populate: {
+        path: "user",
+        select: "fullName designation followers following",
+      },
+    })
     .select("-comments -password");
 };
 exports.findUserById = async (id, body) => {
