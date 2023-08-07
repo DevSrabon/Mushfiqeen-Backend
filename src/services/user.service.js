@@ -14,7 +14,7 @@ exports.findUserByProfile = async (id) => {
       select: "-comments -likers",
       populate: {
         path: "user",
-        select: "fullName designation followers following",
+        select: "fullName designation followers following imageURL",
       },
     })
     .select("-comments -password");
