@@ -165,7 +165,7 @@ exports.getCommentsService = async (req) => {
   const post = await Post.findById(req.params.id)
     // .populate("user", "fullName imageURL designation email followers following")
     .populate("comments.userId", "fullName email imageURL")
-    .populate("likers", "fullName imageURL")
+    .populate("likers", "fullName imageURL designation")
     .populate("comments.replies.userId", "fullName email imageURL")
     .lean();
   post.comments.sort((a, b) => b.createdAt - a.createdAt);
