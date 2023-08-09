@@ -7,6 +7,8 @@ const {
   getCommentsService,
   createReplyService,
   addCommentLikeService,
+  deletePostService,
+  updatePostService,
 } = require("../services/post.service");
 
 exports.createPost = async (req, res) => {
@@ -148,6 +150,37 @@ exports.addCommentLikes = async (req, res) => {
     return res
       .status(201)
       .json({ message: "Comment like/unlike added successfully" });
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+      message: "There was a server side error!",
+    });
+  }
+};
+
+exports.updatePost = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const post = await updatePostService(id, req.body);
+    return res.status(201).json({
+      message: "Post updated successfully!",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+      message: "There was a server side error!",
+    });
+  }
+};
+exports.deletePost = async (req, res) => {
+  try {
+    const { id } = req?.params;
+
+    await deletePostService(id);
+    return res.status(201).json({
+      message: "Post delete successfully!",
+    });
   } catch (error) {
     return res.status(500).json({
       error: error.message,

@@ -172,3 +172,11 @@ exports.getCommentsService = async (req) => {
 
   return post;
 };
+
+exports.updatePostService = async (id, body) => {
+  return await Post.findByIdAndUpdate(id, body, { new: true });
+};
+
+exports.deletePostService = async (id) => {
+  return await Post.findByIdAndDelete(id);
+};
