@@ -40,7 +40,7 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["admin", "user"],
+      enum: ["user", "author", "admin"],
       default: "user",
     },
     fullName: {
@@ -89,7 +89,7 @@ const userSchema = new mongoose.Schema(
     status: {
       type: String,
       default: "inactive",
-      enum: ["active", "inactive", "author", "admin", "blocked"],
+      enum: ["active", "inactive", "blocked"],
     },
     followers: [{ type: mongoose.Types.ObjectId, ref: "User" }],
     following: [{ type: mongoose.Types.ObjectId, ref: "User" }],
