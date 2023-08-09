@@ -124,7 +124,7 @@ exports.getPostService = async (req) => {
           select: "-password -__v -posts -comments",
         })
         .select("-comments")
-        .sort({ updatedAt: -1 })
+        .sort({ createdAt: -1 })
         .skip(parsedSkip)
         .limit(parsedLimit);
 
@@ -134,7 +134,7 @@ exports.getPostService = async (req) => {
           select: "-password -__v -posts -comments",
         })
         .select("-comments")
-        .sort({ updatedAt: -1 })
+        .sort({ createdAt: -1 })
         .skip(parsedSkip)
         .limit(parsedLimit);
 
@@ -147,7 +147,7 @@ exports.getPostService = async (req) => {
           select: "-password -__v -posts -comments",
         })
         .select("-comments")
-        .sort({ updatedAt: -1 })
+        .sort({ createdAt: -1 })
         .skip(parsedSkip)
         .limit(parsedLimit);
 
