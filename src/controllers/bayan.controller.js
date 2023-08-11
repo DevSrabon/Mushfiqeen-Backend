@@ -35,6 +35,25 @@ exports.getBayan = async (req, res) => {
     });
   }
 };
+exports.getBayanById = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const get = await Bayan.find({ user: id })
+      // .populate("user", "fullName email imageURL")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      status: "success",
+      data: get,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: error.message,
+      message: "There was a server side error!",
+    });
+  }
+};
 
 exports.updateBayan = async (req, res) => {
   try {
