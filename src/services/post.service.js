@@ -177,6 +177,93 @@ exports.updatePostService = async (id, body) => {
   return await Post.findByIdAndUpdate(id, body, { new: true });
 };
 
+exports.updateComment = async (postId, commentId, comment) => {
+  try {
+    const result = await Post.findOneAndUpdate(
+      { _id: postId, "comments._id": commentId },
+      { $set: { "comments.$.comment": comment } },
+      { new: true } // Return the updated document
+    );
+
+    if (!result) {
+      throw new Error("Comment not found");
+    }
+
+    // Update comments length after successful update
+    const commentsLength = result.comments.length;
+    await result.updateOne({ $set: { commentsLength } });
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+exports.updateReplyService = async (
+  postId,
+  commentId,
+  replyId,
+  updatedReply
+) => {
+  try {
+    const result = await Post.updateOne(
+      {
+        _id: postId,
+        "comments._id": commentId,
+        "comments.replies._id": replyId,
+      },
+      {
+        $set: {
+          "comments.$.replies.$[reply].reply": updatedReply,
+        },
+      },
+      {
+        arrayFilters: [{ "reply._id": replyId }],
+      }
+    );
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+exports.deleteCommentAndUpdateLengthService = async (postId, commentId) => {
+  try {
+    const result = await Post.updateOne(
+      { _id: postId },
+      { $pull: { comments: { _id: commentId } } }
+    );
+
+    if (result.nModified > 0) {
+      console.log("Comment deleted successfully");
+
+      const updatedPost = await Post.findById(postId);
+      const commentsLength = updatedPost.comments.length;
+
+      await Post.updateOne(
+        { _id: postId },
+        { $set: { commentsLength: commentsLength } }
+      );
+    } else {
+      throw new Error("Comment not found");
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+exports.deleteReplyService = async (postId, commentId, replyId) => {
+  try {
+    const result = await Post.updateOne(
+      { _id: postId, "comments._id": commentId },
+      { $pull: { "comments.$.replies": { _id: replyId } } }
+    );
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
 exports.deletePostService = async (id) => {
   return await Post.findByIdAndDelete(id);
 };

@@ -9,6 +9,10 @@ const {
   addCommentLikes,
   deletePost,
   updatePost,
+  deleteComment,
+  updateComment,
+  deleteReply,
+  updateReply,
 } = require("../controllers/post.controller");
 const verifyToken = require("../middleware/verifyToken");
 const router = express.Router();
@@ -23,5 +27,9 @@ router.put("/:postId/comments/:commentId/like", addCommentLikes);
 router.put("/reply/:id", addReplies);
 router.put("/update/:id", updatePost);
 router.delete("/delete/:id", deletePost);
+router.delete("/delete-comment/:postId/:commentId", deleteComment);
+router.delete("/delete-reply/:postId/:commentId/:replyId", deleteReply);
+router.put("/update-reply/:postId/:commentId/:replyId", updateReply);
+router.put("/update-comment/:postId/:commentId", updateComment);
 // router.get("/reply/:id", getComments);
 module.exports = router;

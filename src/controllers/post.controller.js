@@ -9,6 +9,10 @@ const {
   addCommentLikeService,
   deletePostService,
   updatePostService,
+  deleteCommentAndUpdateLengthService,
+  updateComment,
+  deleteReplyService,
+  updateReplyService,
 } = require("../services/post.service");
 
 exports.createPost = async (req, res) => {
@@ -165,6 +169,62 @@ exports.updatePost = async (req, res) => {
     const post = await updatePostService(id, req.body);
     return res.status(201).json({
       message: "Post updated successfully!",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+      message: "There was a server side error!",
+    });
+  }
+};
+exports.updateComment = async (req, res) => {
+  try {
+    const { postId, commentId } = req?.params;
+    const { comment } = req.body;
+    await updateComment(postId, commentId, comment);
+    return res.status(201).json({
+      message: "Comment updated successfully!",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+      message: "There was a server side error!",
+    });
+  }
+};
+exports.updateReply = async (req, res) => {
+  try {
+    const { postId, commentId, replyId } = req?.params;
+    const { reply } = req.body;
+    await updateReplyService(postId, commentId, replyId, reply);
+    return res.status(201).json({
+      message: "Post delete successfully!",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+      message: "There was a server side error!",
+    });
+  }
+};
+exports.deleteReply = async (req, res) => {
+  try {
+    const { postId, commentId, replyId } = req.params;
+
+    const result = await deleteReplyService(postId, commentId, replyId);
+    res.json({ message: "Reply deleted successfully", result });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred" });
+  }
+};
+exports.deleteComment = async (req, res) => {
+  try {
+    const { postId, commentId, replyId } = req?.params;
+
+    await deleteCommentAndUpdateLengthService(postId, commentId, replyId);
+    return res.status(201).json({
+      message: "Comment deleted successfully!",
     });
   } catch (error) {
     return res.status(500).json({
