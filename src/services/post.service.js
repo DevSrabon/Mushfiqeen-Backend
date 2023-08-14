@@ -234,16 +234,11 @@ exports.deleteCommentAndUpdateLengthService = async (postId, commentId) => {
       { $pull: { comments: { _id: commentId } } }
     );
 
-    if (result.nModified > 0) {
-      console.log("Comment deleted successfully");
-
+    if (result.modifiedCount > 0) {
       const updatedPost = await Post.findById(postId);
       const commentsLength = updatedPost.comments.length;
 
-      await Post.updateOne(
-        { _id: postId },
-        { $set: { commentsLength: commentsLength } }
-      );
+      await Post.updateOne({ _id: postId }, { $set: { commentsLength } });
     } else {
       throw new Error("Comment not found");
     }

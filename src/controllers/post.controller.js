@@ -220,9 +220,9 @@ exports.deleteReply = async (req, res) => {
 };
 exports.deleteComment = async (req, res) => {
   try {
-    const { postId, commentId, replyId } = req?.params;
+    const { postId, commentId } = req?.params;
 
-    await deleteCommentAndUpdateLengthService(postId, commentId, replyId);
+    await deleteCommentAndUpdateLengthService(postId, commentId);
     return res.status(201).json({
       message: "Comment deleted successfully!",
     });
