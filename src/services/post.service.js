@@ -113,7 +113,9 @@ exports.getPostService = async (req) => {
   const query = {};
 
   if (search) {
-    query.title = { $regex: search, $options: "i" }; // Case-insensitive search by title
+    query.user = {
+      $in: await User.find({ fullName: { $regex: search, $options: "i" } }),
+    }; // Search for users by name
   }
   let post;
   let count;
