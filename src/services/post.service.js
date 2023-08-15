@@ -111,9 +111,9 @@ exports.getPostService = async (req) => {
   const { id, search } = req?.query; // Added search query
 
   const query = {};
-
+  let searchQuery = {};
   if (search) {
-    query.user = {
+    searchQuery.user = {
       $in: await User.find({ fullName: { $regex: search, $options: "i" } }),
     }; // Search for users by name
   }
@@ -123,7 +123,9 @@ exports.getPostService = async (req) => {
   try {
     if (id !== "undefined") {
       const { following } = await User.findById(id);
-      post = await Post.find({ user: { $in: following } })
+      post = await Post.find({
+        $or: [searchQuery, { user: { $in: following } }],
+      })
         .populate({
           path: "user",
           select: "-password -__v -posts -comments",
