@@ -108,10 +108,13 @@ exports.findByPostId = async (id) => {
 exports.getPostService = async (req) => {
   const parsedLimit = parseInt(req.query.limit);
   const parsedSkip = parseInt(req.query.skip);
-  const { id } = req?.query;
+  const { id, search } = req?.query; // Added search query
 
   const query = {};
 
+  if (search) {
+    query.title = { $regex: search, $options: "i" }; // Case-insensitive search by title
+  }
   let post;
   let count;
 
